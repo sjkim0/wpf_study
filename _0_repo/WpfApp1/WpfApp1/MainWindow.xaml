@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <Window.Resources>
+        <local:MyViewModel x:Key="vm_key"></local:MyViewModel>
+    </Window.Resources>
+    <StackPanel DataContext="{StaticResource vm_key}">
+        <Button Content="{Binding Vm_name}" Height="100" Command="{Binding viewModelCommandTestCommand}"></Button>
+    </StackPanel>
 </Window>
