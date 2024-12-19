@@ -8,5 +8,16 @@
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
         <Button Content="{Binding Vm_name}" Height="100" Command="{Binding viewModelCommandTestCommand}"></Button>
+        <Button Content="ADD" Height="100" Command="{Binding AddUserCommand}"></Button>
+        <Button Content="LOAD" Height="100" Command="{Binding LoadUsersCommand}"></Button>
+        <ListView ItemsSource="{Binding User_collect}" Height="100">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"></GridViewColumn>
+                    <GridViewColumn Header="NAME" DisplayMemberBinding="{Binding Name}" Width="50"></GridViewColumn>
+                    <GridViewColumn Header="AGE" DisplayMemberBinding="{Binding Age}" Width="50"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </StackPanel>
 </Window>
