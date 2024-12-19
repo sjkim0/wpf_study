@@ -20,5 +20,12 @@ namespace WpfApp1
         {
             InitializeComponent();
         }
+
+        public MainWindow(MyViewModel vm)
+        {
+            InitializeComponent();
+
+            base.DataContext = vm;
+        }
     }
 }
