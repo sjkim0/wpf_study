@@ -85,5 +85,62 @@ namespace WpfApp1
             }
             return users;
         }
+
+        public void DeleteFirst()
+        {
+            try
+            {
+                using (var connection = new SQLiteConnection(DbFile))
+                {
+                    connection.Open();
+                    string delete_first_query = "DELETE FROM Users WHERE Id = (SELECT MIN(Id) FROM Users)";
+
+                    using (var command = new SQLiteCommand(delete_first_query, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public void DeleteLast()
+        {
+            try
+            {
+                using (var connection = new SQLiteConnection(DbFile))
+                {
+                    connection.Open();
+                    string delete_last_query = "DELETE FROM Users WHERE Id = (SELECT MAX(Id) FROM Users)";
+                    SQLiteCommand command = new SQLiteCommand(delete_last_query, connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public void ClearAll()
+        {
+            try
+            {
+                using (var connection = new SQLiteConnection(DbFile))
+                {
+                    connection.Open();
+                    string delete_last_query = "DELETE FROM Users";
+                    SQLiteCommand command = new SQLiteCommand(delete_last_query, connection);
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
     }
 }

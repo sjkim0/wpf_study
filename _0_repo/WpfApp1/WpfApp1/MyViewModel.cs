@@ -14,22 +14,28 @@ namespace WpfApp1
     {
         MyModel model_inst;
         readonly UserServiceDB user_service_inst;
+        UserJsonService user_json_service_inst;
 
         public MyViewModel()
         {
             user_service_inst = new UserServiceDB();
+            user_json_service_inst = new UserJsonService();
 
             model_inst = new MyModel(id: 0);
             Vm_name = "12345";
             Count = 0;
             Collection_test = new ObservableCollection<string>() { Count.ToString() };
 
-            User_collect = new ObservableCollection<User>();
-           
+            User_sql_collect = new ObservableCollection<User>();
+            User_json_collect = new ObservableCollection<UserJson>();
+            
         }
 
         [ObservableProperty]
-        private ObservableCollection<User> user_collect;
+        private ObservableCollection<User> user_sql_collect;
+
+        [ObservableProperty]
+        private ObservableCollection<UserJson> user_json_collect;
 
         [ObservableProperty]
         private int vm_id;
@@ -58,21 +64,81 @@ namespace WpfApp1
         }
 
         [RelayCommand]
-        private void AddUser()
+        private void AddSqlUser()
         {
-            user_service_inst.AddUser("John Doe", 30); // Dummy user
-            LoadUsers(); // Refresh user list
+            user_service_inst.AddUser("User name sql", Count); // Dummy user
+            LoadSqlUsers(); // Refresh user list
         }
 
         [RelayCommand]
-        private void LoadUsers()
+        private void LoadSqlUsers()
         {
-            User_collect.Clear();
+            User_sql_collect.Clear();
             var users = user_service_inst.GetUsers();
             foreach (var user in users)
             {
-                User_collect.Add(user);
+                User_sql_collect.Add(user);
             }
+        }
+
+        [RelayCommand]
+        private void DeleteFirstSql()
+        {
+            user_service_inst.DeleteFirst();
+            LoadSqlUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void DeleteLastSql()
+        {
+            user_service_inst.DeleteLast();
+            LoadSqlUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void ClearAllSql()
+        {
+            user_service_inst.ClearAll();
+            LoadSqlUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void AddJsonUser()
+        {
+            user_json_service_inst.AddUser("User name json", Count); // Dummy user
+            LoadJsonUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void LoadJsonUsers()
+        {
+            User_json_collect.Clear();
+            var users = user_json_service_inst.GetUsers();
+            foreach (var user in users)
+            {
+                User_json_collect.Add(user);
+            }
+        }
+
+        [RelayCommand]
+        private void DeleteFirstJson()
+        {
+            user_json_service_inst.DeleteFirst();
+            LoadJsonUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void DeleteLastJson()
+        {
+            user_json_service_inst.DeleteLast();
+            LoadJsonUsers(); // Refresh user list
+        }
+
+        [RelayCommand]
+        private void DeleteAllJson()
+        {
+            user_json_service_inst.DeleteAll();
+            LoadJsonUsers(); // Refresh user list
         }
     }
 }
