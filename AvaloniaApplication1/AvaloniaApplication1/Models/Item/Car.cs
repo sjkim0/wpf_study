@@ -11,19 +11,23 @@ namespace AvaloniaApplication1.Models.Item
 {
     public class Car : ICar
     {
+        private readonly ILoggerService _loggerService;
         private readonly IEngine _engine;
         private readonly IDoor _door;
 
+        public string name { get; }
 
-        public Car(IEngine engine, IDoor door)
+        public Car(string name, ILoggerService loggerService, IEngine engine, IDoor door)
         {
+            this.name = name;
+            _loggerService = loggerService;
             _engine = engine;
             _door = door;
         }
 
-
         public void GoBackward()
         {
+            _loggerService.Log(name);
             _door.Open();
             _engine.Start();
             _engine.RunBackward();
@@ -31,6 +35,7 @@ namespace AvaloniaApplication1.Models.Item
 
         public void GoFoward()
         {
+            _loggerService.Log(name);
             _engine.Start();
             _engine.RunForward();
         }

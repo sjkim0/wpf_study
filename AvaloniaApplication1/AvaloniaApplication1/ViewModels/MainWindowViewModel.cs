@@ -13,22 +13,17 @@ namespace AvaloniaApplication1.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
-        private readonly IEnumerable<ICar> _cars;
-
-        private readonly ICar _jetCar;
-        private readonly ICar _regularCar;
+        public ICar NormalCar { get; }
+        public ICar SuperCar { get; }
 
         [ObservableProperty]
         public string greeting = "Welcome to Avalonia!";
 
 
-        public MainWindowViewModel(IEnumerable<ICar> cars)
+        public MainWindowViewModel(ICarFactory car_factory)
         {
-            _cars = cars;
-            foreach (ICar car in _cars)
-            {
-                car.GoFoward();
-            }
+            NormalCar = car_factory.CreateNormalCar();
+            SuperCar = car_factory.CreateSuperCar();
         }
 
         //public MainWindowViewModel(Car car)

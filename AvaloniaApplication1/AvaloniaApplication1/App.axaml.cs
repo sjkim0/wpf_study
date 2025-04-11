@@ -4,7 +4,9 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication1.Models;
+using AvaloniaApplication1.Models.Factory;
 using AvaloniaApplication1.Models.Interface;
+using AvaloniaApplication1.Models.Interface.IFactory;
 using AvaloniaApplication1.Models.Item;
 using AvaloniaApplication1.ViewModels;
 using AvaloniaApplication1.Views;
@@ -24,43 +26,32 @@ namespace AvaloniaApplication1
         {
             BindingPlugins.DataValidators.RemoveAt(0);
 
-            ServiceProvider? services;
+            //ServiceProvider? services;
+            ServiceCollection collection = new ServiceCollection();
 
-            // serivce_0
-            ServiceCollection collection;
-            Car normal_car;
-            Car super_car;
-            MainWindowViewModel view_model;
+            collection.AddSingleton<ILoggerService, MessageLogger>();
+            collection.AddTransient<GasEngine>();
+            collection.AddTransient<JetEngine>();
+            collection.AddTransient<RegularDoor>();
+            collection.AddTransient<WingDoor>();
 
-            collection = new ServiceCollection();
-            collection.AddTransient<ILoggerService, MessageLogger>();
-            collection.AddSingleton<IDoor, RegularDoor>();
-            collection.AddTransient<IEngine, GasEngine>();
-            collection.AddTransient<Car>();
-            services = collection.BuildServiceProvider();
+            collection.AddSingleton<Func<GasEngine>>(sp => () => sp.GetRequiredService<GasEngine>());
+            collection.AddSingleton<Func<JetEngine>>(sp => () => sp.GetRequiredService<JetEngine>());
+            collection.AddSingleton<Func<RegularDoor>>(sp => () => sp.GetRequiredService<RegularDoor>());
+            collection.AddSingleton<Func<WingDoor>>(sp => () => sp.GetRequiredService<WingDoor>());
 
-            normal_car = services.GetRequiredService<Car>();  // 여기서 생성자 호출됨
-
-            collection = new ServiceCollection();
-            collection.AddTransient<ILoggerService, MessageLogger>();
-            collection.AddSingleton<IDoor, WingDoor>();
-            collection.AddTransient<IEngine, JetEngine>();
-            collection.AddTransient<Car>();
-            services = collection.BuildServiceProvider();
-
-            super_car = services.GetRequiredService<Car>();  // 여기서 생성자 호출됨
-
-            collection.AddSingleton<ICar>(normal_car);
-            collection.AddSingleton<ICar>(super_car);
+            collection.AddSingleton<ICarFactory, CarFactory>();
             collection.AddTransient<MainWindowViewModel>();
-            services = collection.BuildServiceProvider();
-            view_model = services.GetRequiredService<MainWindowViewModel>();  // 여기서 생성자 호출됨
+
+            ServiceProvider provider = collection.BuildServiceProvider();
+
+            var viewModel = provider.GetRequiredService<MainWindowViewModel>();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = view_model
+                    DataContext = viewModel
                 };
             }
 
